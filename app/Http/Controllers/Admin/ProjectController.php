@@ -23,22 +23,32 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('admin.projects.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $this->validation($data);
+
+        $project = new Project();
+        $project->fill($data);
+        $project->save();
+
+        return redirect()
+            ->route('admin.projects.show', $project)
+            ->with('message', 'Creato con successo');
     }
 
     /**
