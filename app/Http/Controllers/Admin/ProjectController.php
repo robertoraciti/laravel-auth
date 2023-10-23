@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 use App\Models\Project;
@@ -104,5 +105,37 @@ class ProjectController extends Controller
         return redirect()
             ->route('admin.projects.index')
             ->with('message', 'Eliminato con successo');
+    }
+
+    private function validation($data)
+    {
+        return Validator::make(
+            $data,
+            [
+                'name' => 'required|string|max:50',
+                'repo' => 'required|url',
+                'collaborators' => 'required|integer',
+                'publishing_date' => 'required|date',
+                'type' => 'required|string',
+            ],
+            [
+                'name.required' => 'Il nome è obbligatorio',
+                'name.string' => 'Il nome deve essere una stringa',
+                'name.max' => 'Il nome deve contenere massimo 50 caratteri',
+
+                'repo.required' => 'La repo è obbligatoria',
+                'repo.url' => 'La repo deve essere un url',
+
+                'collaborators.required' => 'Il numero dei collaboratori è obbligatorio',
+                'collaborators.integer' => 'Il campo deve essere un numero',
+
+                'publishing_date.required' => 'La data è obbligatoria',
+                'publishing_date.date' => 'Formato data errato',
+
+                'type.required' => 'Il tipo è obbligatorio',
+                'type.string' => 'Il tipo deve essere una stringa',
+            ]
+
+        )->validate();
     }
 }
